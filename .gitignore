@@ -1,0 +1,6 @@
+**/.vscode
+**/venv
+**/__pycache__
+**/migrations
+**/credentials.json
+**/sample_event.json

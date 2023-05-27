@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Upcoming Events</title>
+</head>
+
+<body>
+    <div class="grid lg:grid-cols-3 md:grid-cols-2 items-center justify-justify h-screen w-screen">
+        {% for event in events %}
+        <div class="flex flex-col items-center justify-center mx-5 p-3 text-wrap bg-gray-200 rounded-lg">
+            <h2 class="text-2xl font-bold text-center">{{ event.summary }}</h2>
+            <div class="text-md">{{ event.description }}</div><br>
+            <div class="text-md">{{ event.start_date }}</div><br>
+            <div class="text-md">{{ event.end_date }}</div><br>
+            <div class="text-md">{{ event.status }}</div><br>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+
+</html>

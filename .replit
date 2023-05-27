@@ -1,4 +1,4 @@
-run = "python3 manage.py runserver 0.0.0.0:8000"
+run = "export OAUTHLIB_INSECURE_TRANSPORT=1 && python3 manage.py runserver 0.0.0.0:8000"
 
 # The primary language of the repl. There can be others, though!
 language = "python3"

@@ -13,16 +13,45 @@ from googleapiclient.errors import HttpError
 from backend_assessment.settings import BASE_DIR
 import json
 import os
+import traceback
 
 # Create your views here.
 
-CLIENT_SECRETS_FILE = str(BASE_DIR / "credentials.json")
+# CLIENT_SECRETS_FILE = str(BASE_DIR / "credentials.json")
+
+CLIENT_SECRETS_CONFIG = {
+    os.environ.get("CLIENT_TYPE", "web"): {
+        "client_id": os.environ.get("client_id"),
+        "client_secret": os.environ.get("client_secret"),
+        "auth_uri": os.environ.get("auth_uri"),
+        "token_uri": os.environ.get("token_uri"),
+        "auth_provider_x509_cert_url": os.environ.get("auth_provider_x509_cert_url"),
+        "client_x509_cert_url": os.environ.get("client_x509_cert_url"),
+        "redirect_uris": [
+            # "http://localhost:8000/rest/v1/calendar/redirect",
+            # "http://localhost:8000/rest/v1/calendar/redir",
+            # "http://localhost:8000",
+            "https://convin-task.anuranroy1.repl.co/rest/v1/calendar/redirect",
+            "https://convin-task.anuranroy1.repl.co/rest/v1/calendar/redir",
+            "https://convin-task.anuranroy1.repl.co",
+            "https://92d38d49-f819-4ed6-b134-1692495d4b0d.id.repl.co/rest/v1/calendar/redirect",
+            "https://92d38d49-f819-4ed6-b134-1692495d4b0d.id.repl.co/rest/v1/calendar/redir",
+            "https://92d38d49-f819-4ed6-b134-1692495d4b0d.id.repl.co",
+        ],
+        "javascript_origins": [
+            # "http://localhost:8000",
+            "https://convin-task.anuranroy1.repl.co",
+            "https://92d38d49-f819-4ed6-b134-1692495d4b0d.id.repl.co",
+        ],
+    }
+}
+
 SCOPES = ["https://www.googleapis.com/auth/calendar.events.readonly"]
 
 
 def get_data(creds, event_count=10):
     try:
-        service = build("calendar", "v3", credentials=creds)
+        service = build("calendar", "v3", credentials=creds, static_discovery=False)
 
         # Call the Calendar API
         now = datetime.datetime.utcnow().isoformat() + "Z"  # 'Z' indicates UTC time
@@ -62,34 +91,6 @@ class GoogleCalendarInitView(View):
     #     super(View, self).__init__(request)
 
     def get(self, request) -> Any:
-        CLIENT_SECRETS_CONFIG = {
-            os.environ.get("CLIENT_TYPE", "web"): {
-                "client_id": os.environ.get("client_id"),
-                "client_secret": os.environ.get("client_secret"),
-                "auth_uri": os.environ.get("auth_uri"),
-                "token_uri": os.environ.get("token_uri"),
-                "auth_provider_x509_cert_url": os.environ.get(
-                    "auth_provider_x509_cert_url"
-                ),
-                "client_x509_cert_url": os.environ.get("client_x509_cert_url"),
-                "redirect_uris": [
-                    "http://localhost:8000/rest/v1/calendar/redirect",
-                    "http://localhost:8000/rest/v1/calendar/redir",
-                    "http://localhost:8000",
-                    "https://convin-task.anuranroy1.repl.co/rest/v1/calendar/redirect",
-                    "https://convin-task.anuranroy1.repl.co/rest/v1/calendar/redir",
-                    "https://convin-task.anuranroy1.repl.co",
-                    "https://92d38d49-f819-4ed6-b134-1692495d4b0d.id.repl.co/rest/v1/calendar/redirect",
-                    "https://92d38d49-f819-4ed6-b134-1692495d4b0d.id.repl.co/rest/v1/calendar/redir",
-                    "https://92d38d49-f819-4ed6-b134-1692495d4b0d.id.repl.co",
-                ],
-                "javascript_origins": [
-                    "http://localhost:8000",
-                    "https://convin-task.anuranroy1.repl.co",
-                    "https://92d38d49-f819-4ed6-b134-1692495d4b0d.id.repl.co",
-                ],
-            }
-        }
         flow = google_auth_oauthlib.flow.Flow.from_client_config(
             CLIENT_SECRETS_CONFIG, scopes=SCOPES
         )
@@ -134,8 +135,8 @@ class GoogleCalendarRedirectView(View):
             get_dict = request.GET
             print("\n\nQuery Dict received on RedirectView = \n", get_dict)
             state = get_dict.get("state")
-            flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-                CLIENT_SECRETS_FILE, scopes=SCOPES, state=state
+            flow = google_auth_oauthlib.flow.Flow.from_client_config(
+                CLIENT_SECRETS_CONFIG, scopes=SCOPES, state=state
             )
             flow.redirect_uri = "https://convin-task.anuranroy1.repl.co/rest/v1/calendar/redirect"  # flask.url_for("oauth2callback", _external=True)
             authorization_response = request.build_absolute_uri()
@@ -162,5 +163,5 @@ class GoogleCalendarRedirectView(View):
             # return HttpResponse("Redirect done.")
         except Exception as e:
             return HttpResponse(
-                f"Couldn't process request. Go to login page and try again. Error message: {e}"
+                f"Couldn't process request. Go to login page and try again. Error message: {traceback.print_exc()}"
             )

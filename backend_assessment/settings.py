@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-&%5p*tb@1me+=(80uok5ryec2zp+e(givl_n!1s_mou56g5$ta"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "convin-task.anuranroy1.repl.co",
+    "92d38d49-f819-4ed6-b134-1692495d4b0d.id.repl.co",
+    "10.100.128.196:16430",
+    "localhost:8000",
+]
 
 
 # Application definition
@@ -127,14 +133,14 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-SITE_ID = 1
+# SITE_ID = 1
 
-# Provider specific settings
-SOCIALACCOUNT_PROVIDERS = {
-    "google": {
-        # For each OAuth based provider, either add a ``SocialApp``
-        # (``socialaccount`` app) containing the required client
-        # credentials, or list them here:
-        "APP": {"client_id": "123", "secret": "456", "key": ""}
-    }
-}
+# # Provider specific settings
+# SOCIALACCOUNT_PROVIDERS = {
+#     "google": {
+#         # For each OAuth based provider, either add a ``SocialApp``
+#         # (``socialaccount`` app) containing the required client
+#         # credentials, or list them here:
+#         "APP": {"client_id": "123", "secret": "456", "key": ""}
+#     }
+# }

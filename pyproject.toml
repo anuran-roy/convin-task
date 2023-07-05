@@ -8,7 +8,7 @@ authors = ["Your Name <you@example.com>"]
 python = "^3.10"
 google-auth-oauthlib = "^1.0.0"
 xds-protos = "^0.0.11"
-Django = "^4.2.1"
+Django = "^4.2.3"
 google-api-python-client = "^2.87.0"
 black = "^23.3.0"
 
